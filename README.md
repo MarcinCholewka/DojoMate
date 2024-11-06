@@ -1,81 +1,96 @@
-# Turborepo starter
+# DojoMate Karate Tournament Management Application
+This is a monorepo application for managing karate tournaments, including fight scheduling and tracking for competitors, coaches, parents, and administrators. The application is built with NestJS for the backend and NextJS for the frontend, organized using TurboRepo.
 
-This is an official starter Turborepo.
+## Features
 
-## Using this example
+- User roles: Admin, Coach, Parent, Competitor
+- Competitor management with belt colors and weight classes
+- Tournament scheduling and management
+- Fight tracking and results recording
+- Integration with Prisma ORM for database management
 
-Run the following command:
+## Prerequisites
+Before running the application, ensure you have the following installed:
 
-```sh
-npx create-turbo@latest
+- Node.js (>=22.x)
+- npm (>=10.x)
+- PostgreSQL
+
+## Getting Started
+
+### 1. Clone the repository
+```bash
+git clone git@github.com:MarcinCholewka/DojoMate.git
+cd dojomate
 ```
 
-## What's inside?
-
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm build
+### 2. Install dependencies
+```code
+npm install
 ```
 
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm dev
+### 3. Configure the environment
+### API
+Reach to person which can provide this
+```code
+DATABASE_URL=postgresql******************
 ```
 
-### Remote Caching
-
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
+### WEB
+```code
+BACKEND_URL=http://localhost:8000
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
+### 4. Set up the database
+Navigate to the `apps/api` directory and run Prisma migrations to set up the database schema:
+```bash
+cd apps/api
+npx prisma migrate dev --name init
+npx prisma generate
 ```
-npx turbo link
+
+### 5. Run the application
+Start both the NestJS API server and the NextJS client application using the shared start script:
+```bash
+npm run dev
 ```
 
-## Useful Links
+The API server will start on `http://localhost:8000` and the client application will start on `http://localhost:3000`
 
-Learn more about the power of Turborepo:
+### 6. Access the application
+- API: `http://localhost:8000`
+- Client: `http://localhost:3000`
 
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+## Project Structure
+```
+dojomate
+├── apps/
+│   ├── api/                    # NestJS backend application
+│   │   ├── src/
+│   │   ├── prisma/
+│   │   │   ├── schema.prisma
+│   │   ├── .env
+│   │   ├── package.json
+│   │   └── ...
+│   ├── web/                    # NextJS frontend application
+│   │   ├── app/
+│   │   ├── components/
+│   │   ├── lib/
+│   │   ├── public/
+│   │   ├── .env
+│   │   ├── components.json     # shadcn config file
+│   │   ├── package.json
+│   │   ├── tailwind.config.js
+│   │   ├── tsconfig.json
+│   │   └── ...
+├── turbo.json                  # TurboRepo configuration
+├── package.json                # Monorepo package.json
+└── README.md                   # This file
+```
+
+## Scripts
+### Monorepo scripts
+- `npm run dev`: start both the API server and the client application
+
+## License
+This project is licensed under the MIT License
