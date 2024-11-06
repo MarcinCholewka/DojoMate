@@ -1,0 +1,90 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int          @id @default(autoincrement())
+  firstname   String
+  lastname    String
+  username    String       @unique
+  password    String
+  email       String       @unique
+  role        Role         @default(parent)
+  competitors Competitor[]
+  coaches     Coach[]
+  parents     Parent[]
+  createdAt   DateTime     @default(now())
+}
+
+model Competitor {
+  id          Int       @id @default(autoincrement())
+  firstname   String
+  lastname    String
+  age         Int
+  weightClass String
+  beltColor   BeltColor
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  parentId    Int?
+  parent      Parent?   @relation(fields: [parentId], references: [id])
+  matches     Match[]
+}
+
+model Coach {
+  id        Int    @id @default(autoincrement())
+  firstname String
+  lastname  String
+  userId    Int
+  user      User   @relation(fields: [userId], references: [id])
+}
+
+model Parent {
+  id          Int          @id @default(autoincrement())
+  firstname   String
+  lastname    String
+  userId      Int
+  user        User         @relation(fields: [userId], references: [id])
+  competitors Competitor[]
+}
+
+model Tournament {
+  id       Int      @id @default(autoincrement())
+  name     String
+  location String
+  date     DateTime
+  matches  Match[]
+}
+
+model Match {
+  id           Int        @id @default(autoincrement())
+  opponent     String
+  result       String
+  matchDate    DateTime   @default(now())
+  competitorId Int
+  competitor   Competitor @relation(fields: [competitorId], references: [id])
+  tournamentId Int
+  tournament   Tournament @relation(fields: [tournamentId], references: [id])
+}
+
+enum Role {
+  admin
+  coach
+  parent
+  competitor
+}
+
+enum BeltColor {
+  aka
+  shiro
+}
